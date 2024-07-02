@@ -2,7 +2,35 @@ version: '3.2'
 
 services:
 
+  backend:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile
+    entrypoint: ['/usr/src/ymtl/entrypoint.sh']
+    volumes:
+      - './services/backend:/usr/src/ymtl'
+    ports:
+      - 5001:5000
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=app.config.DevelopmentConfig
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/app_dev
+      - DATABASE_TEST_URL=postgresql://postgres:postgres@db:5432/app_test
+      - SECRET_KEY=change_this_to_some_random_key
+    depends_on:
+      - db
 
+  db:
+    build:
+      context: ./services/db
+      dockerfile: Dockerfile
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
 
   frontend:
     build:
