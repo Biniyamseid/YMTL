@@ -1,6 +1,20 @@
 version: '3.2'
 
+services:
 
 
 
-
+  frontend:
+    build:
+      context: ./services/frontend
+      dockerfile: Dockerfile
+    volumes:
+      - './services/frontend:/usr/src/ymtl'
+      - '/usr/src/ymtl/node_modules'
+    ports:
+      - 3007:3000
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_BACKEND_SERVICE_URL=http://localhost:5001
+    depends_on:
+      - backend
